@@ -35,34 +35,12 @@ static const _tag = "(_SettingPageState)";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation:0,
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: ThemeUtil.backColor,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-
-
-      body: Column(
-        children: [
-
-
-        ],
-      ),
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: 200,
+      color: Colors.greenAccent,
     );
   }
-
 
 
 }

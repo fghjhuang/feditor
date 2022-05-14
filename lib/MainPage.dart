@@ -1,11 +1,12 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'TopSetting.dart';
 import 'base/theme_style.dart';
-
 
 ///MainEditPanel
 class MainEditPanelPage extends StatefulWidget {
+  const MainEditPanelPage({Key? key, required this.ctlListener}) : super(key: key);
+  final ControlBarListener ctlListener;
   @override
   State<StatefulWidget> createState() {
     return _MainEditPanelState();
@@ -14,54 +15,71 @@ class MainEditPanelPage extends StatefulWidget {
 
 class _MainEditPanelState extends State<MainEditPanelPage> {
 /*---------------------------常量---------------------------*/
-static const _tag = "(_MainEditPanelState)";
+  static const _tag = "(_MainEditPanelState)";
 
 /*---------------------------end 常量---------------------------*/
 
-
 /*---------------------------变量---------------------------*/
 
+  final TextEditingController _fileInputCtl = TextEditingController();
 
 /*---------------------------end 变量---------------------------*/
-
 
   @override
   void initState() {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       appBar: AppBar(
-        elevation:0,
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: ThemeUtil.backColor,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+    return Column(
+      children: [
+        ControlBar(listener: widget.ctlListener),
+        _mainPanel(),
+      ],
+    );
+  }
 
-
-      body: Column(
+  Widget _mainPanel() {
+    return Container(
+      // color: Colors.green,
+      height: MediaQuery.of(context).size.height - 60,
+      width: MediaQuery.of(context).size.width,
+      child: Flex(
+        direction: Axis.horizontal,
         children: [
-
-
+          Expanded(child: Container(
+            color: Colors.red,
+            child: TextField(
+              textAlign: TextAlign.left,
+              style:TextStyle(color: Colors.black, fontSize: 18),
+              maxLines: null,
+              minLines: 100,
+              cursorColor:Colors.grey[800],
+              decoration: const InputDecoration(
+                filled: true,
+                border: InputBorder.none,
+                fillColor: Colors.grey,),
+              controller: _fileInputCtl,
+            ),
+          ),flex: 1,)
+          ,
+          Container(
+            width: 2,
+            color: Colors.grey,
+          ),
+          Expanded(child: TextField(
+            style:TextStyle(color: Colors.black, fontSize: 18),
+            maxLines: null,
+            minLines: 1,
+            decoration: const InputDecoration(border: InputBorder.none),
+            controller: _fileInputCtl,
+          ),flex: 1,)
+          ,
         ],
       ),
     );
   }
 
 
-
 }
-

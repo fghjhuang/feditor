@@ -35,29 +35,24 @@ static const _tag = "(_FileBrowserPageState)";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation:0,
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: ThemeUtil.backColor,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-
-
-      body: Column(
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: 200,
+      color: Colors.grey[900],
+      child: Column(
         children: [
+          Container(
 
-
+            height: 60,
+            child: Row(
+              children: [
+                IconButton(onPressed: (){}, icon: Icon(Icons.insert_drive_file_rounded,color: Colors.white,)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.create_new_folder_rounded,color: Colors.white,)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.delete_rounded,color: Colors.white,)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.edit_rounded,color: Colors.white,))
+              ],
+            ),
+          )
         ],
       ),
     );
