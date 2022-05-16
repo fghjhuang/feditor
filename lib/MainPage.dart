@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:markdown/markdown.dart';
 import 'TopSetting.dart';
 import 'base/theme_style.dart';
 
@@ -61,6 +63,11 @@ class _MainEditPanelState extends State<MainEditPanelPage> {
                 border: InputBorder.none,
                 fillColor: Colors.grey,),
               controller: _fileInputCtl,
+              onChanged: (value){
+                setState(() {
+
+                });
+              },
             ),
           ),flex: 1,)
           ,
@@ -68,12 +75,10 @@ class _MainEditPanelState extends State<MainEditPanelPage> {
             width: 2,
             color: Colors.grey,
           ),
-          Expanded(child: TextField(
-            style:TextStyle(color: Colors.black, fontSize: 18),
-            maxLines: null,
-            minLines: 1,
-            decoration: const InputDecoration(border: InputBorder.none),
-            controller: _fileInputCtl,
+          Expanded(child: SingleChildScrollView(
+            child: HtmlWidget(
+                markdownToHtml(_fileInputCtl.text)
+            ),
           ),flex: 1,)
           ,
         ],

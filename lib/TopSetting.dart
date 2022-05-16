@@ -1,3 +1,4 @@
+import 'package:feditor/base/theme_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -58,16 +59,95 @@ class _ControlBarState extends State<ControlBar> {
                   style: TextStyle(
                       fontFamily: 'spixel', color: Colors.white, fontSize: 18)),
             ),
-            flex: 18,
+            flex: 6,
           ),
+
           Expanded(
-            child: IconButton(
-                onPressed: () {_clickSettingBar();},
-                icon: const Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                )),
-            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Stack(
+                  children: [
+                    Row(
+                      children: const [
+                        Text('PREVIEW AS',style: TextStyle(
+                            color: Colors.white
+                        ),),
+                        Icon(Icons.arrow_drop_down,   color: Colors.white)
+                      ],
+                    ),
+                    SizedBox(
+                    //  color: Colors.grey,
+                      child: TextButton(
+                        onPressed: (){
+                          _previewAs();
+                        },
+                        child: const Text('PREVIEW AS',style: TextStyle(
+                          color: Colors.transparent
+                        ),),
+                      ),
+                    )
+                  ],
+                ),
+
+                const SizedBox(width: 35,),
+                Stack(
+                  children: [
+                    Row(
+                      children: const [
+                        Text('EXPORT AS',style: TextStyle(
+                            color: Colors.white
+                        ),),
+                        Icon(Icons.arrow_drop_down,   color: Colors.white)
+                      ],
+                    ),
+                    SizedBox(
+                      //  color: Colors.grey,
+                      child: TextButton(
+                        onPressed: (){
+                          _exportAs();
+                        },
+                        child: const Text('EXPORT AS',style: TextStyle(
+                            color: Colors.transparent
+                        ),),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(width: 35,),
+                Stack(
+                  children: [
+                    Row(
+                      children: const [
+                        Text('IMPORT FROM',style: TextStyle(
+                            color: Colors.white
+                        ),),
+                        Icon(Icons.arrow_drop_down,   color: Colors.white)
+                      ],
+                    ),
+                    SizedBox(
+                      //  color: Colors.grey,
+                      child: TextButton(
+                        onPressed: (){
+                          _importFrom();
+                        },
+                        child: const Text('IMPORT FROM',style: TextStyle(
+                            color: Colors.transparent
+                        ),),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(width: 30,),
+                IconButton(
+                    onPressed: () {_clickSettingBar();},
+                    icon: const Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ))
+              ],
+            ),
+            flex: 12,
           ),
         ],
       ),
@@ -76,6 +156,7 @@ class _ControlBarState extends State<ControlBar> {
 
   bool _enableFileBar=false;
   bool _enableSettingBar=false;
+  //显示隐藏左右边的bar
   void _clickFileBar(){
     _enableFileBar=!_enableFileBar;
     widget.listener.onFileBarClick(_enableFileBar);
@@ -85,4 +166,21 @@ class _ControlBarState extends State<ControlBar> {
     _enableSettingBar=!_enableSettingBar;
     widget.listener.onSettingBarClick(_enableSettingBar);
   }
+
+  //预览
+  void _previewAs(){
+
+  }
+
+  //导入文件
+  void _importFrom(){
+
+  }
+
+  //导出文件
+  void _exportAs(){
+
+  }
+
+
 }
