@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'base/log.dart';
 import 'base/theme_style.dart';
 
 ///MainEditPanel
@@ -31,6 +32,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
 
   @override
   Widget build(BuildContext context) {
+    DartLog.ii(_tag, _accountTree.toString());
     return Container(
       height: MediaQuery.of(context).size.height,
       width: 200,
@@ -43,7 +45,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
               children: [
                 IconButton(
                     onPressed: () {
-                      _addFile();
+                      _addFileUI();
                     },
                     icon: Icon(
                       Icons.insert_drive_file_rounded,
@@ -51,7 +53,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                     )),
                 IconButton(
                     onPressed: () {
-                      _addFolder();
+                      _addFolderUI();
                     },
                     icon: Icon(
                       Icons.create_new_folder_rounded,
@@ -116,10 +118,13 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
   String _getItemType(int index){
     dynamic item=_map[index];
     if(item is Tree){
+      print('index"$index is tree');
       return "tree";
     }else if(item is Node){
+      print('index"$index is Node');
       return "node";
     }
+    print('index"$index is nothing');
     return "";
   }
 
@@ -134,13 +139,16 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
       _indexCount++;
     }
 
+    print('treeList len is:${_accountTree.treeList.length}');
     for(Tree tree in _accountTree.treeList){
-      _indexCount++;
       _map[_indexCount]=tree;
-      res = res+_getTreeLen(tree);
+      _indexCount++;
+      res = res+_getTreeLen(tree)+1;
     }
+    print('total len is:$res');
     return res;
   }
+
   int _getTreeLen(Tree tree){
     int res = 0;
     res = res+tree.nodeList.length;
@@ -149,14 +157,14 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
       _indexCount++;
     }
     for(Tree treeItem in tree.treeList){
-      _indexCount++;
       _map[_indexCount]=treeItem;
-      res = res+_getTreeLen(treeItem);
+      _indexCount++;
+      res = res+_getTreeLen(treeItem)+1;
     }
     return res;
   }
 
-  void _addFile() {
+  void _addFileUI() {
  final TextEditingController _controller=TextEditingController();
     showCupertinoDialog(
         barrierDismissible: true,
@@ -194,10 +202,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                 onPressed: () {
                   Navigator.pop(context);
                   setState(() {
-                    Node _file = Node();
-                    _file.id='0';
-                    _file.name = _controller.text;
-                    _accountTree.nodeList.add(_file);
+                    _addFile(_controller.text);
                   });
                 },
               ),
@@ -213,14 +218,14 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
         });
   }
 
-  void _addFolder() {
+  void _addFolderUI() {
     final TextEditingController _controller=TextEditingController();
     showCupertinoDialog(
         barrierDismissible: true,
         context: context,
         builder: (context) {
           return CupertinoAlertDialog(
-            title: Text("input name"),
+            title: Text("input folder name"),
             content: Card(
               color: Colors.white,
               elevation: 0.0,
@@ -251,10 +256,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                 onPressed: () {
                   Navigator.pop(context);
                   setState(() {
-                    Tree _tree = Tree();
-                    _tree.id='0';
-                    _tree.name = _controller.text;
-                    _accountTree.treeList.add(_tree);
+                    _addTree(_controller.text);
                   });
                 },
               ),
@@ -273,17 +275,48 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
   void _delete() {}
 
   void _editName() {}
+
+  void _addFile(String name){
+    Node _file = Node();
+    if(_selectedNode is Node){
+      _file.level=_selectedNode.level;
+    }else if(_selectedNode is Tree){
+      _file.level=_selectedNode.level+"-0";
+    }
+    _file.name = name;
+    _accountTree.nodes[_accountTree.nodes.length+1]=_file;
+  }
+
+  void _addTree(String name){
+    Tree _tree = Tree();
+    _tree.level='0';
+    _tree.name = name;
+    _accountTree.nodes[].add(_tree);
+  }
 }
 
 class Tree{
-  String id="0";
+  String level="0";
   String name="";
   bool show=true;
-  List<Node> nodeList=[];
-  List<Tree> treeList=[];
+  Map<int,dynamic> nodes={};
+
+  @override
+  String toString(){
+    var nodestr=[];
+    nodes.forEach( (key, value){
+      nodestr.add("($key : $value)");
+    } );
+    return "level:$level,name:$name,show:$show,node list:[$nodestr]";
+  }
 }
 
 class Node{
-  String id="";
+  String level="";
   String name="";
+
+  @override
+  String toString(){
+    return "Node(level:$level,name:$name)";
+  }
 }
