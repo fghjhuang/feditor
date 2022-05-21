@@ -104,7 +104,9 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
   Tree _accountTree = Tree(); //整体的树
   dynamic _selectedNode = ""; //选择的节点
   var _count = 0;
+  String _selectedPath="0";
   Map<int,dynamic> _map={};
+  Map<String,dynamic> _smap={};
   //获取内容
   String _getItem(int index){
     dynamic item=_map[index];
@@ -131,37 +133,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
   //获取长度
   int _indexCount=0;
   int _getTolLen(){
-    int res=0;
-    _indexCount=0;
-    res = res+_accountTree.nodeList.length;
-    for(int i=0;i< _accountTree.nodeList.length;i++){
-      _map[_indexCount]=_accountTree.nodeList[i];
-      _indexCount++;
-    }
-
-    print('treeList len is:${_accountTree.treeList.length}');
-    for(Tree tree in _accountTree.treeList){
-      _map[_indexCount]=tree;
-      _indexCount++;
-      res = res+_getTreeLen(tree)+1;
-    }
-    print('total len is:$res');
-    return res;
-  }
-
-  int _getTreeLen(Tree tree){
-    int res = 0;
-    res = res+tree.nodeList.length;
-    for(int i=0;i< tree.nodeList.length;i++){
-      _map[_indexCount]=tree.nodeList[i];
-      _indexCount++;
-    }
-    for(Tree treeItem in tree.treeList){
-      _map[_indexCount]=treeItem;
-      _indexCount++;
-      res = res+_getTreeLen(treeItem)+1;
-    }
-    return res;
+    return _smap.length;
   }
 
   void _addFileUI() {
@@ -278,20 +250,16 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
 
   void _addFile(String name){
     Node _file = Node();
-    if(_selectedNode is Node){
-      _file.level=_selectedNode.level;
-    }else if(_selectedNode is Tree){
-      _file.level=_selectedNode.level+"-0";
-    }
+    _file.level=_selectedPath;
     _file.name = name;
-    _accountTree.nodes[_accountTree.nodes.length+1]=_file;
+    _smap["$_selectedPath-file"]=_file;
   }
 
   void _addTree(String name){
     Tree _tree = Tree();
-    _tree.level='0';
+    _tree.level=_selectedPath;
     _tree.name = name;
-    _accountTree.nodes[].add(_tree);
+    _smap["$_selectedPath-tree"]=_tree;
   }
 }
 
