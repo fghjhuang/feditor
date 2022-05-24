@@ -54,7 +54,7 @@ class _MainEditPanelState extends State<MainEditPanelPage> {
             color: Colors.red,
             child: TextField(
               textAlign: TextAlign.left,
-              style:TextStyle(color: Colors.black, fontSize: 18),
+              style:TextStyle(color: Colors.black, fontSize: 18,fontFamily: 'flowy'),
               maxLines: null,
               minLines: 100,
               cursorColor:Colors.grey[800],
