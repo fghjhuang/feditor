@@ -47,7 +47,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                     onPressed: () {
                       _addFileUI();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.insert_drive_file_rounded,
                       color: Colors.white,
                     )),
@@ -55,7 +55,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                     onPressed: () {
                       _addFolderUI();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.create_new_folder_rounded,
                       color: Colors.white,
                     )),
@@ -63,7 +63,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                     onPressed: () {
                       _delete();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete_rounded,
                       color: Colors.white,
                     )),
@@ -71,7 +71,7 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                     onPressed: () {
                       _editName();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit_rounded,
                       color: Colors.white,
                     ))
@@ -86,13 +86,16 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
                     return Container(
                       child: TextButton(
                           onPressed: () {
-                            _selectedNode = _map[index];
+                            _selected(index);
                           },
-                          child: Row(
-                            children: [
-                              Icon(_getItemType(index)=="tree"?Icons.folder:Icons.insert_drive_file),
-                              Text(_getItem(index))
-                            ],
+                          child: Container(
+                            color: _accountTree[index].cur==_selectedNode?.cur?Colors.black54:Colors.transparent,
+                            child: Row(
+                              children: [
+                                Icon(_getItemType(index)=="tree"?Icons.folder:Icons.insert_drive_file),
+                                Text(_getItem(index))
+                              ],
+                            ),
                           )),
                     );
                   }))
@@ -101,39 +104,31 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
     );
   }
 
-  Tree _accountTree = Tree(); //整体的树
-  dynamic _selectedNode = ""; //选择的节点
+  List<Node> _accountTree = []; //整体的树
   var _count = 0;
-  String _selectedPath="0";
+  Node? _selectedNode;
   Map<int,dynamic> _map={};
   Map<String,dynamic> _smap={};
   //获取内容
   String _getItem(int index){
-    dynamic item=_map[index];
-    if(item is Tree){
-      return item.name;
-    }else if(item is Node){
-      return item.name;
-    }
-    return "";
+    return _accountTree[index].name;
   }
   String _getItemType(int index){
-    dynamic item=_map[index];
-    if(item is Tree){
-      print('index"$index is tree');
-      return "tree";
-    }else if(item is Node){
-      print('index"$index is Node');
-      return "node";
-    }
-    print('index"$index is nothing');
-    return "";
+    return _accountTree[index].type;
   }
 
   //获取长度
-  int _indexCount=0;
+
   int _getTolLen(){
-    return _smap.length;
+    return _accountTree.length;
+  }
+
+  //点击文件或者文件夹
+  _selected(int index){
+    _selectedNode=_accountTree[index];
+    setState(() {
+
+    });
   }
 
   void _addFileUI() {
@@ -250,41 +245,58 @@ class _FileBrowserPageState extends State<FileBrowserPage> {
 
   void _addFile(String name){
     Node _file = Node();
-    _file.level=_selectedPath;
+
     _file.name = name;
-    _smap["$_selectedPath-file"]=_file;
+    if(_selectedNode?.type=="node"){
+      int parent = _selectedNode?.parent??0;
+      _file.parent=parent;
+      List<Node> list = _accountTree.where((element) => element.parent==parent).toList();
+      _file.cur = list.length+1;
+    }else if(_selectedNode?.type=="tree"){
+
+    }else{
+      int parent = _selectedNode?.parent??0;
+      _file.parent=parent;
+      List<Node> list = _accountTree.where((element) => element.parent==parent).toList();
+      _file.cur = list.length+1;
+    }
+    _file.show=true;
+    _file.type="node";
+    _accountTree.add(_file);
   }
 
   void _addTree(String name){
-    Tree _tree = Tree();
-    _tree.level=_selectedPath;
-    _tree.name = name;
-    _smap["$_selectedPath-tree"]=_tree;
-  }
-}
+    Node _file = Node();
+    _file.name = name;
+    if(_selectedNode?.type=="node"){
+      int parent = _selectedNode?.parent??0;
+      _file.parent=parent;
+      List<Node> list = _accountTree.where((element) => element.parent==parent).toList();
+      _file.cur = list.length+1;
+    }else if(_selectedNode?.type=="tree"){
 
-class Tree{
-  String level="0";
-  String name="";
-  bool show=true;
-  Map<int,dynamic> nodes={};
-
-  @override
-  String toString(){
-    var nodestr=[];
-    nodes.forEach( (key, value){
-      nodestr.add("($key : $value)");
-    } );
-    return "level:$level,name:$name,show:$show,node list:[$nodestr]";
+    }else{
+      int parent = _selectedNode?.parent??0;
+      _file.parent=parent;
+      List<Node> list = _accountTree.where((element) => element.parent==parent).toList();
+      _file.cur = list.length+1;
+    }
+    _file.show=true;
+    _file.type="tree";
+    _accountTree.add(_file);
   }
 }
 
 class Node{
-  String level="";
+  int parent=0;
+  int cur=0;
   String name="";
+  bool show=true;
+  String type="node"; //node tree
 
   @override
   String toString(){
-    return "Node(level:$level,name:$name)";
+    return "(parent:$parent,cur:$cur,name:$name,show:$show,type:$type)";
   }
 }
+
